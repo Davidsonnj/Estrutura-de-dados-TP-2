@@ -45,7 +45,7 @@ int main() {
         
         patient_print(list_patient);
         printf("///////////////////////////////////////////////////////////////////////\n");
-        /*int check = checkMachinesAvailability(Machine);
+        int check = checkMachinesAvailability(Machine);
         if (check != -1){
           int examDuration = rand() % 5 + 5;
           
@@ -55,8 +55,8 @@ int main() {
 
 
 
-        Pathologie *path = Assessing_Pathologies();
-        QueueEnqueue_registerRecord(report, nextID, time, path);*/
+      Pathologie *path = Assessing_Pathologies();
+      QueueEnqueue_registerRecord(report, nextID, time, path);
       nextID++;
     }
   }

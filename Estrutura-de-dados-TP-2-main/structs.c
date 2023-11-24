@@ -39,7 +39,14 @@ struct Queue_Node {
   QueueNode *next; /* Ponteiro para o próximo paciente da fila */
 };
 
-/* Fazer funções que a lista de maquina */
+/*Lista de maquinas */
+struct ListOfMachines {
+  int count;       /* Contador de máquinas */
+  ListNode *first; /* Ponteiro para a primeiro máquina da lista */
+  ListNode *last;  /* Ponteiro para a último máquina da lista */
+};
+
+/* estrutura das maquinas */
 struct Machines {
   int examDuration; /* Duração de exame do aparelho */
   int patientID;    /* ID do paciente que está ocupando a máquina */

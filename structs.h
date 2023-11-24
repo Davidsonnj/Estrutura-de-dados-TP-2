@@ -12,8 +12,8 @@ typedef struct list_node ListNode;
 typedef struct Queue_Node QueueNode;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                               # PACIENTES # */
-
+/*                                                # PACIENTES #                                                      */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 patient *newPatient(char *name, char *cpf, int age, int id); /* Função para criar novo paciente, com ID sequencial */
 
@@ -32,6 +32,7 @@ void ListPatient_free(ListPatient *list); /* Função que libera memória da Lis
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                            # EXAMES & APARELHOS #                                                 */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 QueueExams *QueueExams_create(); /* Função que cria uma fila de exames vazia */
@@ -48,7 +49,8 @@ void CheckMachines(Machines* machines, int time); /* Checa se alguem terminou o 
 void releaseMachines(Machines *allMachines); /*Função para liberar todas as máquinas */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                                # LAUDOS # */
+/*                                                      # LAUDOS #                                                   */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

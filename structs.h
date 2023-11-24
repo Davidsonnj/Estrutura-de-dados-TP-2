@@ -43,8 +43,8 @@ void QueueFree(QueueExams *q); /* Função para liberar memória usada para arma
 void takingExam(QueueExams *examQueue, Machines *machines, int time); /* Função para realizar o exame */
 
 Machines *initializeMachines(); /* Função para iniciar o funcionamento dos aparelhos (todos iniciam disponíveis (0)) */
-int checkMachinesAvailability(Machines *machines); /* Função para checar a disponibilidade dos aparelhos */
-void releaseMachines(Machines *allMachines, int time); /*Função para liberar todas as máquinas */
+int checkMachinesAvailability(Machines *machines, int time); /* Função para checar a disponibilidade dos aparelhos */
+void releaseMachines(Machines *allMachines); /*Função para liberar todas as máquinas */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                # LAUDOS # */

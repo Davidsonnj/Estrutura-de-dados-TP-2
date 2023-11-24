@@ -42,6 +42,7 @@ struct Queue_Node {
 struct Machines {
   int examDuration; /* Duração de exame do aparelho */
   int patientID;    /* ID do paciente que está ocupando a máquina */
+  int time;
 };
 
 struct ExamRecord {
@@ -92,7 +93,9 @@ int ListPatient_size(ListPatient *list) {
   return list->count; /* retorna tamanho da lista de pacientes */
 };
 
-int ListEmpty(ListPatient *list) { return ListPatient_size(list) == 0; }
+int ListEmpty(ListPatient *list) { 
+  return ListPatient_size(list) == 0; 
+}
 
 void ListPatient_insert(ListPatient *list, patient *patients) {
 
@@ -160,7 +163,9 @@ QueueExams *QueueExams_create() {
   return q;                                                   /* Retorna a fila de exames */
 }
 
-int QueueEmpty(QueueExams *q) { return q->front == NULL; }
+int QueueEmpty(QueueExams *q) { 
+  return q->front == NULL; 
+}
 
 void QueueEnqueue(QueueExams *q, int newID) {
   QueueNode *node = (QueueNode *)malloc(sizeof(QueueNode)); /* Aloca memoria para um novo ID */
@@ -203,24 +208,28 @@ void QueueFree(QueueExams *q) {
 
 /* Função que inicializa o array de máquinas */
 Machines *initializeMachines() {
-  Machines *allMachines = (Machines *)malloc(5 * sizeof(Machines)); /* Array da struct Machine. Cada índice do array
-                                corresponde a uma máquina */
-  for (int i = 0; i < MAX_MACHINES; i++) {
+  Machines *allMachines = (Machines *)malloc(5 * sizeof(Machines)); /* Array da struct Machine. Cada índice do array corresponde a uma máquina */
+  for (int i = 0; i <= MAX_MACHINES; i++) {
     allMachines[i].examDuration = 0;
-    allMachines[i].patientID = 0; /* Nenhum paciente no começo */
+    allMachines[i].patientID = 0;     /* Nenhum paciente no começo */
+    allMachines[i].time = 0;
   }
   return allMachines;
 }
 
-void CheckMachines(Machines* machines){
+void CheckMachines(Machines* machines, int time){
   for (int i = 0; i <= MAX_MACHINES; i++){
-    if (machines[i].examDuration == time) {
+    if ((machines[i].examDuration + machines[i].time) == time) {
         // fazer funcao que faz laudo
         machines[i].examDuration = 0;
         machines[i].patientID = 0;
         return i;
     }
   }
+}
+
+void *limpar_Maquinas(Machines *mach){
+  free(mach);
 }
 
 /* Função que checa a existência de alguma máquina livre */
@@ -233,29 +242,25 @@ int checkMachinesAvailability(Machines *machines) {
 }
 
 void takingExam(QueueExams *examQueue, Machines *machines, int time) {
-  /* Os aparelhos só ficam ociosos se a fila para exame estiver vazia */
-  while (!QueueEmpty(examQueue)) {
 
     int availableMachineIndex = checkMachinesAvailability(machines);
 
     /* Se houver pelo menos uma máquina ocupada */
     if (availableMachineIndex != -1) {
-      int patientID =
-          examQueue->front->id; /* Recebe o ID do primeiro paciente da fila */
-      QueueDequeue(examQueue);  /* Remove o paciente da fila de exames */
+      int patientID = examQueue->front->id;  /* Recebe o ID do primeiro paciente da fila */
+      QueueDequeue(examQueue);               /* Remove o paciente da fila de exames */
 
       /* Tempo de duração do exame: nº inteiro pseudo-aleatório entre 5 e 10 */
       int examDuration = rand() % 6 + 5;
 
-      machines[availableMachineIndex].examDuration =
-          examDuration; /* Máquina fica ocupada */
-      machines[availableMachineIndex].patientID =
-          patientID; /* O paciente de ID x está usando a máquina */
+      machines[availableMachineIndex].examDuration = examDuration; /* Máquina fica ocupada */
+      machines[availableMachineIndex].patientID = patientID;       /* O paciente de ID x está usando a máquina */
     }
-  }
 }
 
-void releaseMachines(Machines *allMachines) { free(allMachines); }
+void releaseMachines(Machines *allMachines) { 
+  free(allMachines); 
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                     FUNÇÕES RELATIVAS À FILA DE LAUDOS */
@@ -360,5 +365,3 @@ void QueueExams_print(QueueExams *exams){
   }
 
 }
-
-//dasdsadasdasdasdsaaaaaaaaaaaaa

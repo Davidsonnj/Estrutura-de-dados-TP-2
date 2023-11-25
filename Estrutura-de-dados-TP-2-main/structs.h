@@ -5,6 +5,7 @@ typedef struct QueueExams QueueExams; /* Fila de Exames, que armazena somente o 
 typedef struct ExamRecord ExamRecord; /* Registro dos exames */
 typedef struct Patient patient; /* Definição da estrutura Patient, relativa aos pacientes */
 typedef struct ListOfPatients ListPatient; /* Lista de Pacientes, nosso banco de dados */
+typedef struct ListOfMachines ListMachines;
 typedef struct Machines Machines; /* Estrutura para armazenamento dos aparelhos utilizados nos exames */
 typedef struct QueueReport QueueReport; /* Fila de Laudos, que armazena os registros de exames */
 typedef struct Pathologies Pathologie;
@@ -31,7 +32,7 @@ void ListPatient_free(ListPatient *list); /* Função que libera memória da Lis
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                            # EXAMES & APARELHOS #                                                 */
+/*                                                  # EXAMES #                                                       */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -41,12 +42,15 @@ void QueueEnqueue(QueueExams *q, int newID); /* Função que insere um novo exam
 void QueueDequeue(QueueExams *q); /* Função para desenfileirar um elemento da lista, ou seja, remover o nó inicial da lista */
 void QueueFree(QueueExams *q); /* Função para liberar memória usada para armazenamento da fila de exames */
 
-void takingExam(QueueExams *examQueue, Machines *machines, int time); /* Função para realizar o exame */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                                 # APARELHOS #                                                     */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Machines *initializeMachines(); /* Função para iniciar o funcionamento dos aparelhos (todos iniciam disponíveis (0)) */
-int checkMachinesAvailability(Machines *machines); /* Função para checar a disponibilidade dos aparelhos */
-int CheckMachines_exams(Machines *machines, int time); /* Checa se alguem terminou o exame */
-void releaseMachines(Machines *allMachines); /*Função para liberar todas as máquinas */
+int ListEmpty_Machines(ListMachines *m);
+ListMachines *ListMachines_create();
+void initializeMachines(int qtd, ListMachines *m); /* Função para iniciar o funcionamento dos aparelhos (todos iniciam disponíveis (0)) */
+Machines* checkMachinesAvailability(ListMachines *mach);
+void insert_machines(ListMachines *m, QueueExams *patient, int time);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                      # LAUDOS #                                                   */
@@ -66,6 +70,6 @@ Pathologie *Assessing_Pathologies();
 
 void patient_print(ListPatient *l);
 void QueueExams_print(QueueExams *exams);
-void machine_print(Machines *machine);
+void machine_print(ListMachines *machine);
 
 #endif

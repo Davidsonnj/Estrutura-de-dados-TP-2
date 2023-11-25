@@ -42,8 +42,8 @@ struct Queue_Node {
 /*Lista de maquinas */
 struct ListOfMachines {
   int count;       /* Contador de máquinas */
-  ListNode *first; /* Ponteiro para a primeiro máquina da lista */
-  ListNode *last;  /* Ponteiro para a último máquina da lista */
+  Machines *first; /* Ponteiro para a primeiro máquina da lista */
+  Machines *last;  /* Ponteiro para a último máquina da lista */
 };
 
 /* estrutura das maquinas */
@@ -51,6 +51,8 @@ struct Machines {
   int examDuration; /* Duração de exame do aparelho */
   int patientID;    /* ID do paciente que está ocupando a máquina */
   int time;
+  Machines *next;
+  Machines *prev;
 };
 
 struct ExamRecord {
@@ -186,7 +188,7 @@ int QueueEmpty(QueueExams *q) {
 
 /* Colocar um no paciente na fila de exames*/
 void QueueEnqueue(QueueExams *q, int newID) {
-  QueueNode *node = (QueueNode *)malloc(sizeof(QueueNode)); /* Aloca memoria para um novo ID */
+  QueueNode *node = (QueueNode *)calloc(1,sizeof(QueueNode)); /* Aloca memoria para um novo ID */
   node->id = newID;       /* Atribui o identificador (ID) ao novo nó da fila */
   node->next = NULL;      /* O próximo nó da fila fica vazio */
 
@@ -198,7 +200,7 @@ void QueueEnqueue(QueueExams *q, int newID) {
   q->rear = node;         /* Novo nó vai para o último lugar da fila */
 }
 
-/* Tirar o primeiro paciente da fila de exames */
+/* Função que tira o primeiro paciente da fila de exames */
 void QueueDequeue(QueueExams *q) {
   QueueNode *temp = q->front;    /* Armazenamento temporario para nó que será removido */
 
@@ -226,7 +228,78 @@ void QueueFree(QueueExams *q) {
 /*                                            FUNÇÕES RELATIVAS AOS APARELHOS                                        */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* Fazer funções para máquinas */
+/* Verifica se a lista de máquinas está vazia */
+int ListEmpty_Machines(ListMachines *m){
+  return (m->count == 0);
+}
+
+/* Função que cria a lista de máquinas */
+ListMachines *ListMachines_create() {
+ListMachines *list_M = (ListMachines *)malloc(sizeof(ListMachines)); /* Aloca memoria para lista de máquinas */
+
+  list_M->count = 0;        /* Inicializa o contador com 0 máquinas */
+  list_M->first = NULL;     /* Inicializa o primeiro elemento da lista como vazio */
+  list_M->last = NULL;      /* Inicializa o último elemento da lista como vazio */
+
+  return list_M;            /* Retorna a lista de maquinas */
+};
+
+/* Inicializa as máquinas de acordo com a quantidade de máquinas no hospital */
+void initializeMachines(int qtd, ListMachines *m){
+  for(int i = 0; i < qtd; i++ ){
+
+    Machines *mach = (Machines *)malloc(sizeof(Machines));
+    mach->examDuration = 0;
+    mach->patientID = 0;
+    mach->time = 0;
+    mach->next = m->first;
+    mach->prev = NULL;
+
+    /* Verifica se não lista está vazia */
+    if (!ListEmpty_Machines(m))
+      m->first->prev = mach;
+    else
+      m->last = mach;
+
+    m->first = mach;
+    m->count++;
+  }
+  
+}
+
+/* Função para checar a disponibilidade dos aparelhos (RETORNA O APARELHO DISPONÍVEL)*/
+Machines* checkMachinesAvailability(ListMachines *machine){ 
+
+  if(!ListEmpty_Machines(machine)){
+    for(Machines *m = machine->first; m != NULL; m = m->next ){
+      if(m->examDuration == 0 || m->patientID == 0 || m->time == 0){
+        return m;
+      }
+    }
+  }
+  return NULL;
+}
+
+/* Se houver aparelho disponível irá colocar o paciente para realização do exame */
+void insert_machines(ListMachines *m, QueueExams *patient, int time) {
+  Machines *mach = checkMachinesAvailability(m);
+
+  if (mach != NULL) {
+    QueueNode *pat = patient->front;
+
+    if (pat != NULL && pat->id != 0) {
+
+      int numb_rand = rand() % 5 + 5;
+      mach->examDuration = numb_rand;
+      mach->patientID = pat->id;
+      mach->time = time;
+
+      QueueDequeue(patient);
+    }
+  }
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                     FUNÇÕES RELATIVAS À FILA DE LAUDOS                                            */
@@ -335,11 +408,12 @@ void QueueExams_print(QueueExams *exams){
   for(QueueNode *patient = exams->front; patient != NULL; patient = patient->next  ){
     printf("%d ", patient->id);
   }
-
 }
 
-void machine_print(Machines *machine){
-  for(int i =0; i <= MAX_MACHINES; i++){
-    printf("%d %d %d", machine[i].examDuration, machine[i].patientID, machine[i].time);
+void machine_print(ListMachines *machine){
+  for(Machines *m = machine->first; m != NULL; m = m->next ){
+    int ID = m->patientID;
+    printf("Duração do exame: %d ID: %d Horario: %d Quantidade de maquinas: %d \n", m->examDuration, ID, m->time, machine->count);
+
   }
 }

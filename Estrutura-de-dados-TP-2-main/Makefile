@@ -2,7 +2,7 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall
+CFLAGS = -g -Wall -Wextra
 
 # Source files
 SRCS = main.c structs.c
@@ -11,7 +11,7 @@ SRCS = main.c structs.c
 OBJS = $(SRCS:.c=.o)
 
 # Executable name
-TARGET = test_hospital
+TARGET = hospital
 
 # Phony targets
 .PHONY: all compile run clean

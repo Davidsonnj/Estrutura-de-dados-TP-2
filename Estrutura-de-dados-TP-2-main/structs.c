@@ -386,6 +386,7 @@ Pathologie *Assessing_Pathologies() {
 /*                                                # PRINTS #                                                         */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* Função que printa a lista de pacientes */
 void patient_print(ListPatient *l){
    for (ListNode *p = l->first; p != NULL; p = p->next)
    {
@@ -398,6 +399,7 @@ void patient_print(ListPatient *l){
    printf("\n");
 }
 
+/* Função que printa a fila de exames */
 void QueueExams_print(QueueExams *exams){
   
   for(QueueNode *patient = exams->front; patient != NULL; patient = patient->next  ){
@@ -405,11 +407,18 @@ void QueueExams_print(QueueExams *exams){
   }
 }
 
+/* Função que printa as maquinas e sua disponibilidade */
 void machine_print(ListMachines *machine){
   for(Machines *m = machine->first; m != NULL; m = m->next ){
     int ID = m->patientID;
     printf("Duração do exame: %d ID: %d Horario: %d Quantidade de maquinas: %d \n", m->examDuration, ID, m->time, machine->count);
 
+  }
+}
+
+void QueueReport_print(QueueReport *r){
+  for(ExamRecord *q = r->front; q != NULL; q = q->next ){
+    printf("ID do paciente: %d Horario de entrada: %d Condicao: %s \n", q->id, q->finishTime, q->path->condition);
   }
 }
 

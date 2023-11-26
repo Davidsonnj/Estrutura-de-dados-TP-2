@@ -47,16 +47,24 @@ int main() {
         nextID++;
     }
     
-    QueueExams_print(exams);
+    //QueueExams_print(exams);
     printf("\n");
     insert_machines(Machine, exams, time);
 
+    machine_print(Machine);
+    printf("\n");
+    
     Exam_Record(report, Machine, time);
+
+    QueueReport_print(report);
+    machine_print(Machine);
+    printf("\n");
+
+    printf("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
 
   }
   printf("\n");
-  patient_print(list_patient);
-  machine_print(Machine);
+  //patient_print(list_patient);
 
   fclose(arquivo);
   return 0;

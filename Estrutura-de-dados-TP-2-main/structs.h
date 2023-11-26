@@ -67,5 +67,6 @@ Pathologie *Assessing_Pathologies();
 void patient_print(ListPatient *l);
 void QueueExams_print(QueueExams *exams);
 void machine_print(ListMachines *machine);
+void QueueReport_print(QueueReport *r);
 
 #endif

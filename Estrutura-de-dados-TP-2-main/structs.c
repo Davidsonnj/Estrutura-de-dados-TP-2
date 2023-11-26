@@ -5,9 +5,6 @@
 #include <string.h>
 #include <time.h>
 
-/* Quantidade máxima de aparelhos disponíveis */
-#define MAX_MACHINES 4
-
 struct Patient {
 
   char name[50]; /* Nome do paciente */
@@ -268,7 +265,7 @@ void initializeMachines(int qtd, ListMachines *m){
 }
 
 /* Função para checar a disponibilidade dos aparelhos (RETORNA O APARELHO DISPONÍVEL)*/
-Machines* checkMachinesAvailability(ListMachines *machine){ 
+static Machines* checkMachinesAvailability(ListMachines *machine){ 
 
   if(!ListEmpty_Machines(machine)){
     for(Machines *m = machine->first; m != NULL; m = m->next ){
@@ -280,7 +277,7 @@ Machines* checkMachinesAvailability(ListMachines *machine){
   return NULL;
 }
 
-/* Se houver aparelho disponível irá colocar o paciente para realização do exame */
+/* Se houver máquina disponível irá colocar o paciente para realização do exame */
 void insert_machines(ListMachines *m, QueueExams *patient, int time) {
   Machines *mach = checkMachinesAvailability(m);
 
@@ -299,66 +296,64 @@ void insert_machines(ListMachines *m, QueueExams *patient, int time) {
   }
 }
 
+/* Se o paciente houver terminado seu exame na máquina irá ser retirado da mesma (RETORNA O ID) */
+static int machine_check(ListMachines *machine, int time){
+  for(Machines *m = machine->first; m != NULL; m = m->next ){
+    if(m->examDuration + m->time == time){
+      int ID = m->patientID;
+      m->patientID = 0;
+      m->examDuration = 0;
+      m->time = 0;
+      return ID;
+    }
+  }
+  return -1;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                     FUNÇÕES RELATIVAS À FILA DE LAUDOS                                            */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* Função que verifica se a lista de laudos está vazia */
+int QueueReportEmpty(QueueReport *report) { 
+  return report->front == NULL; 
+}
+
 /* Função que cria a fila de laudos */
 QueueReport *QueueReport_create() {
-  QueueReport *q = (QueueReport *)malloc(sizeof(QueueReport));
-  q->front = q->rear = NULL; /* Fila começa vazia */
-  return q;
+  QueueReport *report = (QueueReport *)malloc(sizeof(QueueReport));
+  report->front = report->rear = NULL; /* Fila começa vazia */
+  return report;
 }
 
-/* Função que verifica se a lista de laudos está vazia */
-int QueueReportEmpty(QueueReport *q) { 
-  return q->front == NULL; 
-}
+/* Função que verifica se o paciente terminou o exame e transferi para a fila de laudo */
+void Exam_Record(QueueReport *report, ListMachines *m, int time){
+  int check;
+  while(check = machine_check(m, time) != -1){
 
-/* Função que coloca um novo paciente na fila para laudos */
-QueueReport *QueueEnqueue_registerRecord(QueueReport *q, int id, int time, Pathologie *path){
+    /* Criação do laudo */
+    ExamRecord *r = (ExamRecord *)malloc(sizeof(ExamRecord));
+    r->finishTime = time;
+    r->id = check;
+    r->path = Assessing_Pathologies();
 
-  ExamRecord *r_record = (ExamRecord *)malloc(sizeof(ExamRecord)); /* Aloca memoria para um novo ID */
-  r_record->id = id;          /* Atribui o identificador (ID) ao novo nó da fila */
-  r_record->finishTime = time;
-  r_record->path = path;
-  r_record->next = NULL;      /* O próximo nó da fila fica vazio */
-
-  if (QueueReportEmpty(q))
-    q->front = r_record;      /* Novo nó vai para frente da fila */
-  else
-    q->rear->next = r_record; /* Novo nó vai para o último lugar da fila */
-
-  q->rear = r_record;         /* Novo nó vai para o último lugar da fila */
-  return q;
-}
-
-
-void addExamRecord_toQueueReport(QueueReport *q, ExamRecord *record, int time) {
-
-  /* Em caso de registro inválido */
-  if (q == NULL || record == NULL) {
-    return;
+    /* Adicionando na fila de registro */
+    if(QueueReportEmpty(report)){
+      report->front = report->rear = r;
+    }
+    else{
+      report->rear->next = r;
+      report->rear = r;
+    }
   }
-
-  /* Se a fila de laudos estiver vazia, o primeiro e o último elemento devem ser o novo registro */
-  if (QueueReportEmpty(q)) {
-    q->front = q->rear = record;
-
-  } else {
-    q->rear->next = record;
-    q->rear = record;
-  }
-  record->next = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                # PATOLOGIAS #                                                     */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Pathologie *CreatePathologie(char condition[20], int severity) {
+static Pathologie *CreatePathologie(char condition[20], int severity) {
   Pathologie *p = (Pathologie *)malloc(sizeof(Pathologie));
   strcpy(p->condition, condition);
   p->urgency = severity;
@@ -416,4 +411,46 @@ void machine_print(ListMachines *machine){
     printf("Duração do exame: %d ID: %d Horario: %d Quantidade de maquinas: %d \n", m->examDuration, ID, m->time, machine->count);
 
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                        # Funçoes que talvez exclua #                                              */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/* Função que coloca um novo paciente na fila para laudos */
+QueueReport *QueueEnqueue_registerRecord(QueueReport *q, int id, int time, Pathologie *path){
+
+  ExamRecord *r_record = (ExamRecord *)malloc(sizeof(ExamRecord)); /* Aloca memoria para um novo ID */
+  r_record->id = id;          /* Atribui o identificador (ID) ao novo nó da fila */
+  r_record->finishTime = time;
+  r_record->path = path;
+  r_record->next = NULL;      /* O próximo nó da fila fica vazio */
+
+  if (QueueReportEmpty(q))
+    q->front = r_record;      /* Novo nó vai para frente da fila */
+  else
+    q->rear->next = r_record; /* Novo nó vai para o último lugar da fila */
+
+  q->rear = r_record;         /* Novo nó vai para o último lugar da fila */
+  return q;
+}
+
+
+void addExamRecord_toQueueReport(QueueReport *q, ExamRecord *record, int time) {
+
+  /* Em caso de registro inválido */
+  if (q == NULL || record == NULL) {
+    return;
+  }
+
+  /* Se a fila de laudos estiver vazia, o primeiro e o último elemento devem ser o novo registro */
+  if (QueueReportEmpty(q)) {
+    q->front = q->rear = record;
+
+  } else {
+    q->rear->next = record;
+    q->rear = record;
+  }
+  record->next = NULL;
 }

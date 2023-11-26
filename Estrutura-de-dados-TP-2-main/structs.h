@@ -49,19 +49,15 @@ void QueueFree(QueueExams *q); /* Função para liberar memória usada para arma
 int ListEmpty_Machines(ListMachines *m);
 ListMachines *ListMachines_create();
 void initializeMachines(int qtd, ListMachines *m); /* Função para iniciar o funcionamento dos aparelhos (todos iniciam disponíveis (0)) */
-Machines* checkMachinesAvailability(ListMachines *mach);
 void insert_machines(ListMachines *m, QueueExams *patient, int time);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                      # LAUDOS #                                                   */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 QueueReport *QueueReport_create(); /* Função que cria uma fila de laudos vazia */
 int QueueReportEmpty(QueueReport *q); /* Função que verifica se a fila de laudos está vazia */
-void addExamRecord_toQueueReport(QueueReport *q, ExamRecord *record, int time); /* Função que insere um ExamRecord ao final da fila de laudos */
-QueueReport *QueueEnqueue_registerRecord(QueueReport *q, int id, int time, Pathologie *path);
+void Exam_Record(QueueReport *report, ListMachines *m, int time); /* Função que verifica se o paciente terminou o exame e transferi para a fila de laudo */
 Pathologie *Assessing_Pathologies();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

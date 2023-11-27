@@ -39,14 +39,16 @@ int main() {
       char cpf[20];
 
       fscanf(arquivo, "%49s\n%15s\n%d\n", name, cpf, &age);
+
         /* Lista de pacientes */
         patient = newPatient(name, cpf, age, nextID);
         ListPatient_insert(list_patient, patient);
+        
         /* Fila de pacientes */
         QueueEnqueue(exams, nextID);
         nextID++;
     }
-    
+
     //QueueExams_print(exams);
     printf("\n");
     insert_machines(Machine, exams, time);

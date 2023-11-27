@@ -37,9 +37,13 @@ void ListPatient_free(ListPatient *list); /* Função que libera memória da Lis
 
 
 QueueExams *QueueExams_create(); /* Função que cria uma fila de exames vazia */
+
 int QueueEmpty(QueueExams *q); /* Função que verifica se a fila de exames está vazia */
+
 void QueueEnqueue(QueueExams *q, int newID); /* Função que insere um novo exame (ou seja, insere um novo ID) no início da fila */
+
 void QueueDequeue(QueueExams *q); /* Função para desenfileirar um elemento da lista, ou seja, remover o nó inicial da lista */
+
 void QueueFree(QueueExams *q); /* Função para liberar memória usada para armazenamento da fila de exames */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,8 +51,11 @@ void QueueFree(QueueExams *q); /* Função para liberar memória usada para arma
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int ListEmpty_Machines(ListMachines *m);
+
 ListMachines *ListMachines_create();
+
 void initializeMachines(int qtd, ListMachines *m); /* Função para iniciar o funcionamento dos aparelhos (todos iniciam disponíveis (0)) */
+
 void insert_machines(ListMachines *m, QueueExams *patient, int time);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,8 +63,11 @@ void insert_machines(ListMachines *m, QueueExams *patient, int time);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 QueueReport *QueueReport_create(); /* Função que cria uma fila de laudos vazia */
+
 int QueueReportEmpty(QueueReport *q); /* Função que verifica se a fila de laudos está vazia */
+
 void Exam_Record(QueueReport *report, ListMachines *m, int time); /* Função que verifica se o paciente terminou o exame e transferi para a fila de laudo */
+
 Pathologie *Assessing_Pathologies();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,8 +75,11 @@ Pathologie *Assessing_Pathologies();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void patient_print(ListPatient *l);
+
 void QueueExams_print(QueueExams *exams);
+
 void machine_print(ListMachines *machine);
+
 void QueueReport_print(QueueReport *r);
 
 #endif

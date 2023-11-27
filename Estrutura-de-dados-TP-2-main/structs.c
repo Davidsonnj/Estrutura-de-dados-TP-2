@@ -43,7 +43,7 @@ struct ListOfMachines {
   Machines *last;  /* Ponteiro para a último máquina da lista */
 };
 
-/* estrutura das maquinas */
+/* Estrutura das maquinas */
 struct Machines {
   int examDuration; /* Duração de exame do aparelho */
   int patientID;    /* ID do paciente que está ocupando a máquina */
@@ -297,7 +297,7 @@ void insert_machines(ListMachines *m, QueueExams *patient, int time) {
 }
 
 /* Se o paciente houver terminado seu exame na máquina irá ser retirado da mesma (RETORNA O ID) */
-static int machine_check(ListMachines *machine, int time){
+int machine_check(ListMachines *machine, int time){
   for(Machines *m = machine->first; m != NULL; m = m->next ){
     if(m->examDuration + m->time == time){
       int ID = m->patientID;
@@ -329,14 +329,16 @@ QueueReport *QueueReport_create() {
 
 /* Função que verifica se o paciente terminou o exame e transferi para a fila de laudo */
 void Exam_Record(QueueReport *report, ListMachines *m, int time){
-  int check;
-  while(check = machine_check(m, time) != -1){
+
+  int check = 0;
+  while ((check = machine_check(m, time)) != -1) {
 
     /* Criação do laudo */
     ExamRecord *r = (ExamRecord *)malloc(sizeof(ExamRecord));
     r->finishTime = time;
     r->id = check;
     r->path = Assessing_Pathologies();
+    r->next = NULL;
 
     /* Adicionando na fila de registro */
     if(QueueReportEmpty(report)){
@@ -354,6 +356,7 @@ void Exam_Record(QueueReport *report, ListMachines *m, int time){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static Pathologie *CreatePathologie(char condition[20], int severity) {
+
   Pathologie *p = (Pathologie *)malloc(sizeof(Pathologie));
   strcpy(p->condition, condition);
   p->urgency = severity;
@@ -361,25 +364,26 @@ static Pathologie *CreatePathologie(char condition[20], int severity) {
 }
 
 Pathologie *Assessing_Pathologies() {
-  srand(time(NULL));
 
   int numb_random = rand() % 100 + 1;
   char condition[20];
 
-  switch (numb_random) {
-  case 1 ... 30:
+  if (1 <= numb_random && numb_random <= 30)
     return CreatePathologie(strcpy(condition,"Saúde Normal"), 1);
-  case 31 ... 50:
-    return CreatePathologie(strcpy(condition, "Bronquite"), 2);
-  case 51 ... 70:
-    return CreatePathologie(strcpy(condition, "Pneumonia"), 3);
-  case 71 ... 85:
-    return CreatePathologie(strcpy(condition, "Fratura de Fêmur"), 4);
-  case 86 ... 100:
-    return CreatePathologie(strcpy(condition, "Apendicite"), 4);
-  default:
-    return NULL;
-  }
+  
+  if (31 <= numb_random && numb_random <= 50)
+    return CreatePathologie(strcpy(condition,"Bronquite"), 2);
+  
+  if (51 <= numb_random && numb_random <= 70)
+    return CreatePathologie(strcpy(condition,"Pneumonia"), 3);
+
+  if (71 <= numb_random && numb_random <= 85)
+    return CreatePathologie(strcpy(condition,"Fratura de Fêmur"), 4);
+
+  if (86 <= numb_random && numb_random <= 100)
+    return CreatePathologie(strcpy(condition,"Apendicite"), 4);
+  
+  return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -416,50 +420,9 @@ void machine_print(ListMachines *machine){
   }
 }
 
-void QueueReport_print(QueueReport *r){
-  for(ExamRecord *q = r->front; q != NULL; q = q->next ){
-    printf("ID do paciente: %d Horario de entrada: %d Condicao: %s \n", q->id, q->finishTime, q->path->condition);
+void QueueReport_print(QueueReport *r) {
+  for (ExamRecord *rec = r->front; rec != NULL; rec = rec->next){
+
+    printf("ID do paciente: %d Horário: %d Condição: %s\n", rec->id, rec->finishTime, rec->path->condition);
   }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                        # Funçoes que talvez exclua #                                              */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/* Função que coloca um novo paciente na fila para laudos */
-QueueReport *QueueEnqueue_registerRecord(QueueReport *q, int id, int time, Pathologie *path){
-
-  ExamRecord *r_record = (ExamRecord *)malloc(sizeof(ExamRecord)); /* Aloca memoria para um novo ID */
-  r_record->id = id;          /* Atribui o identificador (ID) ao novo nó da fila */
-  r_record->finishTime = time;
-  r_record->path = path;
-  r_record->next = NULL;      /* O próximo nó da fila fica vazio */
-
-  if (QueueReportEmpty(q))
-    q->front = r_record;      /* Novo nó vai para frente da fila */
-  else
-    q->rear->next = r_record; /* Novo nó vai para o último lugar da fila */
-
-  q->rear = r_record;         /* Novo nó vai para o último lugar da fila */
-  return q;
-}
-
-
-void addExamRecord_toQueueReport(QueueReport *q, ExamRecord *record, int time) {
-
-  /* Em caso de registro inválido */
-  if (q == NULL || record == NULL) {
-    return;
-  }
-
-  /* Se a fila de laudos estiver vazia, o primeiro e o último elemento devem ser o novo registro */
-  if (QueueReportEmpty(q)) {
-    q->front = q->rear = record;
-
-  } else {
-    q->rear->next = record;
-    q->rear = record;
-  }
-  record->next = NULL;
 }

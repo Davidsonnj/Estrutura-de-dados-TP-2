@@ -1,4 +1,4 @@
-#include "structs.h"
+#include "simulation.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,4 +1,4 @@
-#include "structs.h"
+#include "simulation.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -368,22 +368,20 @@ Pathologie *Assessing_Pathologies() {
   int numb_random = rand() % 100 + 1;
   char condition[20];
 
-  if (1 <= numb_random && numb_random <= 30)
-    return CreatePathologie(strcpy(condition,"Saúde Normal"), 1);
-  
-  if (31 <= numb_random && numb_random <= 50)
-    return CreatePathologie(strcpy(condition,"Bronquite"), 2);
-  
-  if (51 <= numb_random && numb_random <= 70)
-    return CreatePathologie(strcpy(condition,"Pneumonia"), 3);
-
-  if (71 <= numb_random && numb_random <= 85)
-    return CreatePathologie(strcpy(condition,"Fratura de Fêmur"), 4);
-
-  if (86 <= numb_random && numb_random <= 100)
-    return CreatePathologie(strcpy(condition,"Apendicite"), 4);
-  
-  return NULL;
+  switch (numb_random) {
+  case 1 ... 30:
+    return CreatePathologie("Saúde Normal", 1);
+  case 31 ... 50:
+    return CreatePathologie("Bronquite", 2);
+  case 51 ... 70:
+    return CreatePathologie("Pneumonia", 3);
+  case 71 ... 85:
+    return CreatePathologie("Fratura de Fêmur", 4);
+  case 86 ... 100:
+    return CreatePathologie("Apendicite", 4);
+  default:
+    return NULL;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

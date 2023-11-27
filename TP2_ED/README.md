@@ -15,20 +15,26 @@ As principais competências a serem desenvolvidas neste trabalho incluem:
 - Uso e implementação de filas.
 - Implementação de módulos e TADS.
 
-# Instalação e Execução ?????
+> 📰 _A especificação completa do trabalho pode ser lida acessando o arquivo specification.pdf_
+
+# Instalação e Execução
 Certifique-se de conter pré-instalado em seu sistema um **compilador C (por exemplo, GCC)**. 
-
+ 
 Para instalar o programa em seu computador, siga os passos a seguir:
-1. Clone o repositório em seu Desktop:
+1. Clone o repositório em seu Desktop e salve-o no local desejado:
 ```bash
-  git clone //COPIAR ENDEREÇO DO REPOSITÓRIO!!!!!!!!!!!!!!!!
+git clone https://github.com/Davidsonnj/Estrutura-de-dados-TP-2
 ```
 
-2. Compile o código e execute:
-```bash
-  gcc -o tp2ED main.c
-  ./T2ED
+2. Abra seu terminal, escreva ```cd``` e cole o caminho no qual o repositório está salvo, como no exemplo:
 ```
+cd C:\Users\ThiagoPX\Documents\Estrutura-de-dados-TP-2\TP2_ED
+```
+3. Compile o código e execute-o digitando o seguinte comando:
+```
+make
+```
+Como resultado, serão gerados os arquivos ```hospital.exe```, ```main.o``` e ```simulation.o```. 
 
 Uma opção alternativa consiste em baixar o .zip com a pasta do projeto, extrair os arquivos, compilar e executar.
 
@@ -44,62 +50,27 @@ Vale ressaltar que, no total, a simulação tem tempo máximo de 43.200 unidades
 
 ## Organização do projeto
 O trabalho conta com os principais arquivos:
-- `banco.txt`: que contém nosso _banco de dados_ de pacientes
+- **`data.txt`**: contém nosso _banco de dados_ de pacientes, com seus respectivos nomes, CPF e idade;
+- **`simulation.c`**: contém as principais funções e structs que viabilizam a simulação do exame de raio-X;
+- **`simulation.h`**: contém o cabeçalho das funções utilizadas;
+- **`main.c`**: onde as funções e structs da simulação são implementadas; 
 
+### Principais Estruturas & Decisões de Implementação
+A seguir, temos a descrições das principais estruturas de dados utilizadas no programa, bem como as principais decisões tomadas durante a implementação
 
-### Principais Estruturas
-A seguir, temos a descrições das principais estruturas de dados utilizadas no programa. Utilizamos em nosso trabalho o conceito de listas encadeadas para manipulação das imagens e dos dados extraidos dela. Utilizamos também dois tipos abstratos de dados (TADs): O tipo img e o tipo lista, que descreveremos a seguir.
+### __ListPatient__
 
-### ListPatient
-
-
-### __IMG:__
-
-O TAD img lida com o struct IMG, que é a estrutura que lida com as informações das imagens .pgm utilizadas no programa. O struct IMG possui todas informações do arquivo da imagem e um vetor que armazena o histograma da imagem. O TAD lida principalmente com a leitura e escrita das imagens. 
-
-```
-typedef struct {
-  char tipo[5];
-  int largura, altura;
-  int brilhoMax;
-  unsigned char **mat;
-  unsigned int hist[256];
-} IMG;
-```
-
-### __Lista:__
-
-O TAD lista é o responsável pelas operações envolvendo listas encadeadas. Ele engloba dois tipos dinstintos de lista, cada uma com uma finalidade e um node próprio. A _Lista_ é composta pelo _ListaNode_, struct que guarda um ponteiro para um IMG. Ela é utilizada na parte _offline_, durante o processo de extração dos histogramas médios.
-
-```
-//Node utilizado pela Lista
-
-struct listaNode {
-  IMG *img;
-  ListaNode *next;
-};
-
-```
-Já o outro tipo de lista, o _ListaH_, utiliza o _HistNode_. Esse tipo de node armazena o diretório e o histograma médio de um local. Esse tipo de lista é utilizado na parte _online_ do programa, para listar todos os histogramas médios que serão comparados com o histograma da imagem na query.
-
-```
-//Node utilizado pela ListaH
-
-struct histNode{
-  char * local;
-  unsigned int hist[256];
-  HistNode *next;
-};
-```
-
-
-<hr >
-
-# Decisões tomadas
 1. **Padronização de IDs**:
 static int nextID = 1000;
+2. struct Patient
 
-2. **Lista de Pacientes é uma fila**
+### __QueueExam__
 
-3. **Gestão de Erros por meio de mensagens impressas**: Decidimos adicionar avisos ao usuário em casos de má execução do código para facilitar o entendimento do programa.
+### __QueueReport__
 
+### __ListPatient__
+- é uma lista
+
+### __ExamRecord__
+
+### __Pathologies__

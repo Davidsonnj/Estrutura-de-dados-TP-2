@@ -1,5 +1,5 @@
-#ifndef STRUCTS_H
-#define STRUCTS_H
+#ifndef SIMULATION_H
+#define SIMULATION_H
 
 typedef struct QueueExams QueueExams; /* Fila de Exames, que armazena somente o ID dos novos pacientes */
 typedef struct ExamRecord ExamRecord; /* Registro dos exames */

@@ -80,7 +80,7 @@ struct Radiologist
 {
   int occupation;
   int patientID;
-  int durationRad;
+  int durationRad;  /* Duração do processo de preparação do laudo */
   int time;
   Radiologist *next;
   Radiologist *prev;
@@ -171,7 +171,7 @@ int ListPatient_remove(ListPatient *list, patient *patients) {
   return 0; /* Sucesso ao remover paciente */
 }
 
-/* Função que remove/libera todos os pacientes da memoria */
+/* Função que remove/libera todos os pacientes da memória */
 void ListPatient_free(ListPatient *list) {
   ListNode *node = list->first;
 
@@ -413,7 +413,7 @@ Pathologie *Assessing_Pathologies() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                               # RADIOLOGISTA #                                                    */
+/*                                               # RADIOLOGISTAS #                                                   */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* Verifica se a lista de radiologista está vazia */
@@ -490,7 +490,7 @@ int insert_radio(ListRadiologist *r, QueueReport *patient, int time) {
   return 0;
 }
 
-/* Paciente terminar sua consulta com o radiologista */
+/* Paciente termina sua consulta com o radiologista */
 void remove_radio(ListRadiologist *r,int time){
   for(Radiologist *radio = r->first; radio != NULL; radio = radio->next){
 

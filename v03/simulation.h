@@ -1,15 +1,24 @@
-#ifndef STRUCTS_H
-#define STRUCTS_H
+#ifndef SIMULATION_H
+#define SIMULATION_H
 
 typedef struct QueueExams QueueExams; /* Fila de Exames, que armazena somente o ID dos novos pacientes */
 typedef struct ExamRecord ExamRecord; /* Registro dos exames */
+
 typedef struct Patient patient; /* Definição da estrutura Patient, relativa aos pacientes */
 typedef struct ListOfPatients ListPatient; /* Lista de Pacientes, nosso banco de dados */
+
+typedef struct ListOfMachines ListMachines;
 typedef struct Machines Machines; /* Estrutura para armazenamento dos aparelhos utilizados nos exames */
+
 typedef struct QueueReport QueueReport; /* Fila de Laudos, que armazena os registros de exames */
-typedef struct Pathologies Pathologie;
-typedef struct list_node ListNode;
-typedef struct Queue_Node QueueNode;
+typedef struct Pathologies Pathologie; /* Estrutura relativa as características da patologia (condição e gravidade) */
+
+typedef struct ListOfRadiologist ListRadiologist; /* Lista dos Radiologistas */
+typedef struct Radiologist Radiologist; /* Estrutura relativa aos Radiologistas e o processo de preparação do laudo */
+
+typedef struct list_node ListNode;    /* Auxiliar para implementação de ListOfPatients*/
+typedef struct Queue_Node QueueNode; /* Auxiliar para implementação de QueueExams*/
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                # PACIENTES #                                                      */
@@ -31,40 +40,71 @@ void ListPatient_free(ListPatient *list); /* Função que libera memória da Lis
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                            # EXAMES & APARELHOS #                                                 */
+/*                                                  # EXAMES #                                                       */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 QueueExams *QueueExams_create(); /* Função que cria uma fila de exames vazia */
+
 int QueueEmpty(QueueExams *q); /* Função que verifica se a fila de exames está vazia */
+
 void QueueEnqueue(QueueExams *q, int newID); /* Função que insere um novo exame (ou seja, insere um novo ID) no início da fila */
+
 void QueueDequeue(QueueExams *q); /* Função para desenfileirar um elemento da lista, ou seja, remover o nó inicial da lista */
+
 void QueueFree(QueueExams *q); /* Função para liberar memória usada para armazenamento da fila de exames */
 
-void takingExam(QueueExams *examQueue, Machines *machines, int time); /* Função para realizar o exame */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                                 # APARELHOS #                                                     */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Machines *initializeMachines(); /* Função para iniciar o funcionamento dos aparelhos (todos iniciam disponíveis (0)) */
-int checkMachinesAvailability(Machines *machines); /* Função para checar a disponibilidade dos aparelhos */
-void CheckMachines(Machines* machines, int time); /* Checa se alguem terminou o exame */
-void releaseMachines(Machines *allMachines); /*Função para liberar todas as máquinas */
+int ListEmpty_Machines(ListMachines *m); /* Função de verificação da ocupação das máquinas (se estão vazias ou não) */
+
+ListMachines *ListMachines_create();    /* Função que cria uma lista para armazenar as máquinas */
+
+void initializeMachines(int qtd, ListMachines *m);  /* Função para iniciar o funcionamento dos aparelhos (todos iniciam disponíveis (0)) */
+
+void insert_machines(ListMachines *m, QueueExams *patient, int time);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                      # LAUDOS #                                                   */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 QueueReport *QueueReport_create(); /* Função que cria uma fila de laudos vazia */
+
 int QueueReportEmpty(QueueReport *q); /* Função que verifica se a fila de laudos está vazia */
-void addExamRecord_toQueueReport(QueueReport *q, ExamRecord *record, int time); /* Função que insere um ExamRecord ao final da fila de laudos */
-QueueReport *QueueEnqueue_registerRecord(QueueReport *q, int id, int time, Pathologie *path);
-Pathologie *Assessing_Pathologies();
+
+void Exam_Record(QueueReport *report, ListMachines *m, int time); /* Função que verifica se o paciente terminou o exame e transferi para a fila de laudo */
+
+Pathologie *Assessing_Pathologies(); /* Função que avalia/computa as patologias, com suas respectivas probabilidades de ocorrência */
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                               # RADIOLOGISTAS #                                                   */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int ListEmpty_Radiologist(ListRadiologist *r); /* Verifica se a lista de radiologista está vazia */
+
+ListRadiologist *Radiologist_create(); /* Função que cria a lista de radiologista */
+
+void initializeRadiologist(int qtd, ListRadiologist *r); /* Função que inicializa o trabalho dos radiologistas */
+
+int insert_radio(ListRadiologist *r, QueueReport *patient, int time); /* Alocação do primeiro exame de QueueReport para radiologista livre */
+
+void remove_radio(ListRadiologist *r,int time); /* Remoção do  */
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       # PRINTS #                                                  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void patient_print(ListPatient *l);
+
 void QueueExams_print(QueueExams *exams);
+
+void machine_print(ListMachines *machine);
+
+void QueueReport_print(QueueReport *r);
+
+void radio_print(ListRadiologist *radio);
 
 #endif

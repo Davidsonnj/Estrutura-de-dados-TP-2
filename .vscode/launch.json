@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": ".",
-      "program": "build/Debug/outDebug",
+      "cwd": "c:/Users/sofia/Documents/faculdade/Estrutura-de-dados-TP-2/Estrutura-de-dados-TP-2-main/TP2_ED",
+      "program": "c:/Users/sofia/Documents/faculdade/Estrutura-de-dados-TP-2/Estrutura-de-dados-TP-2-main/TP2_ED/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

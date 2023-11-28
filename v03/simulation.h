@@ -90,7 +90,7 @@ void initializeRadiologist(int qtd, ListRadiologist *r); /* Função que inicial
 
 int insert_radio(ListRadiologist *r, QueueReport *patient, int time); /* Alocação do primeiro exame de QueueReport para radiologista livre */
 
-void remove_radio(ListRadiologist *r,int time); /* Remoção do  */
+int remove_radio(ListRadiologist *r,int time); /* Remoção do  */
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

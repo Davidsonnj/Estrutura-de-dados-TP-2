@@ -484,14 +484,15 @@ int insert_radio(ListRadiologist *r, QueueReport *patient, int time) {
       radio->time = time;
       radio->occupation = 1;
       QueueDequeue_report(patient);
-      return time;
+      return numb_rand;
     }
   }
   return 0;
 }
 
 /* Paciente termina sua consulta com o radiologista */
-void remove_radio(ListRadiologist *r,int time){
+int remove_radio(ListRadiologist *r,int time){
+  int cont = 0;
   for(Radiologist *radio = r->first; radio != NULL; radio = radio->next){
 
     if(time == (radio->durationRad + radio->time)){
@@ -499,9 +500,10 @@ void remove_radio(ListRadiologist *r,int time){
       radio->occupation = 0;
       radio->patientID = 0;
       radio->time = 0;
+      cont++;
     }
-
   }
+  return cont;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

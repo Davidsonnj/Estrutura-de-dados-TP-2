@@ -9,9 +9,13 @@ int main() {
 
   srand(time(NULL));
   int cont = 0;
+  int cont2 = 0;
+  int time_report_med = 0;
+  int qtd_patient_report = 0;
+  int calc_metric1= 0;
   int relatorio = 11; 
   int nextID = 1000;
-  int max_time = 1000;
+  int max_time = 50;
   char filename[10];
   patient *patient;
 
@@ -57,17 +61,21 @@ int main() {
     Exam_Record(report, Machine, time);
 
     /* Tempo que o paciente saí da QueueReport (fila de laudo) e é alocado para o Radiologista */
-    int cont_exam_med = insert_radio(Radio, report, time); 
-    remove_radio(Radio,time);
+    cont = insert_radio(Radio, report, time); 
+    cont2 = remove_radio(Radio,time);
 
-    cont = cont + cont_exam_med;
+    time_report_med = time_report_med + cont;
+    qtd_patient_report = qtd_patient_report + cont2;
+
+    calc_metric1 = (qtd_patient_report != 0) ? (time_report_med / qtd_patient_report) : 0;
+
 
     /* RELATÓRIO DE MÉTRICAS */
     if((relatorio % 10) == 0){
       printf("\nRELATÓRIO DE MÉTRICAS - Unidade de Tempo: %d\n", time);
-      printf("TML (Tempo médio de laudo): %d\n", (cont/7200));
+      printf("TML (Tempo médio de laudo): %d\n", calc_metric1);
       printf("TMP (Tempo médio de laudo por patologia): %d\n", (cont/7200));
-      printf("QEL (Quantidade de exames realizados após o limite de tempo estabelecido): %d\n\n", (cont/7200));      
+      printf("QEL (Quantidade de exames realizados após o limite de tempo estabelecido): %d\n\n", (cont/7200));
     }
     
     relatorio = relatorio + 1;

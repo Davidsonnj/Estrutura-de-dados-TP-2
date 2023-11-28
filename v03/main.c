@@ -10,12 +10,34 @@ int main() {
   srand(time(NULL));
   int cont = 0;
   int cont2 = 0;
+  int calc_metric1= 0;
+
+  int cont_Normal = 0;
+  int cont_NormalTemp = 0;
+  int calc_normal = 0;
+
+  int cont_Pneumonia = 0;
+  int cont_PneumoniaTemp = 0;
+  int calc_Pneumonia = 0;
+
+  int cont_Bronquite = 0;
+  int cont_BronquiteTemp = 0;
+  int calc_Bronquite = 0;
+
+  int cont_Fratura = 0;
+  int cont_FraturaTemp = 0;
+  int calc_Fratura = 0;
+
+  int cont_Apendicite = 0;
+  int cont_ApendiciteTemp = 0;
+  int calc_Apendicite = 0;
+
   int time_report_med = 0;
   int qtd_patient_report = 0;
-  int calc_metric1= 0;
+
   int relatorio = 11; 
   int nextID = 1000;
-  int max_time = 50;
+  int max_time = 100;
   char filename[10];
   patient *patient;
 
@@ -69,13 +91,52 @@ int main() {
 
     calc_metric1 = (qtd_patient_report != 0) ? (time_report_med / qtd_patient_report) : 0;
 
+    cont_Normal = total_path(report, "Saúde Normal");
+    cont_NormalTemp = tempWait_path(report, "Saúde Normal");
+
+    calc_normal = (cont_Normal != 0) ? (cont_NormalTemp / cont_Normal) : 0;
+   
+
+    cont_Bronquite = total_path(report, "Bronquite");
+    cont_BronquiteTemp = tempWait_path(report, "Bronquite");
+
+    calc_Bronquite = (cont_Bronquite != 0) ? (cont_BronquiteTemp / cont_Bronquite) : 0;
+
+    cont_Pneumonia = total_path(report, "Pneumonia");
+    cont_PneumoniaTemp = tempWait_path(report, "Pneumonia");
+
+    calc_Pneumonia = (cont_Pneumonia != 0) ? (cont_PneumoniaTemp / cont_Pneumonia) : 0;
+
+    cont_Fratura = total_path(report, "Fratura de Fêmur");
+    cont_FraturaTemp = tempWait_path(report, "Fratura de Fêmur");
+
+    calc_Fratura = (cont_Fratura != 0) ? (cont_FraturaTemp / cont_Fratura) : 0;
+
+    cont_Apendicite = total_path(report, "Apendicite");
+    cont_ApendiciteTemp = tempWait_path(report, "Apendicite");
+
+    calc_Apendicite = (cont_Apendicite != 0) ? (cont_ApendiciteTemp / cont_Apendicite) : 0;
+
+    time_report_med = examsBeyondTimeLimit(report, 7200);
+    
 
     /* RELATÓRIO DE MÉTRICAS */
     if((relatorio % 10) == 0){
       printf("\nRELATÓRIO DE MÉTRICAS - Unidade de Tempo: %d\n", time);
+
       printf("TML (Tempo médio de laudo): %d\n", calc_metric1);
-      printf("TMP (Tempo médio de laudo por patologia): %d\n", (cont/7200));
-      printf("QEL (Quantidade de exames realizados após o limite de tempo estabelecido): %d\n\n", (cont/7200));
+
+      printf("TMP (Tempo médio de laudo por patologia (Saúde Normal)): %d\n", calc_normal);
+
+      printf("TMP (Tempo médio de laudo por patologia (Bronquite)): %d\n", calc_Bronquite);
+
+      printf("TMP (Tempo médio de laudo por patologia (Pneumonia)): %d\n", calc_Pneumonia);
+
+      printf("TMP (Tempo médio de laudo por patologia (Fratura de Fêmur)): %d\n", calc_Fratura);
+
+      printf("TMP (Tempo médio de laudo por patologia (Apendicite)): %d\n", calc_Apendicite);
+
+      printf("QEL (Quantidade de exames realizados após o limite de tempo estabelecido): %d\n\n", time_report_med);
     }
     
     relatorio = relatorio + 1;

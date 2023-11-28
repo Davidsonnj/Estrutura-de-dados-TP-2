@@ -107,4 +107,12 @@ void QueueReport_print(QueueReport *r);
 
 void radio_print(ListRadiologist *radio);
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                        # FUNÇÃO PARA LIMPAR MEMORIA #                                             */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int total_path(QueueReport *r, const char *p);
+int tempWait_path(QueueReport *r, const char *p);
+int examsBeyondTimeLimit(QueueReport *report, int timeLimit);
+
 #endif

@@ -554,3 +554,50 @@ void radio_print(ListRadiologist *radio){
 
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                        # FUNÇÃO PARA LIMPAR MEMORIA #                                             */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                        # FUNÇÃO PARA LIMPAR MEMORIA #                                             */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int total_path(QueueReport *r, const char *p){
+  int cont = 0;
+  for (ExamRecord *record = r->front; record != NULL; record = record->next){
+    
+    int result = strcmp(record->path->condition, p);
+    if(result == 0){
+      cont++;
+    }
+  }
+  return cont;
+}
+
+int tempWait_path(QueueReport *r, const char *p){
+  int cont = 0;
+  for (ExamRecord *record = r->front; record != NULL; record = record->next){
+    
+    int result = strcmp(record->path->condition, p);
+    if(result == 0){
+      cont = cont + record->finishTime;
+    }
+  }
+  return cont;
+}
+
+int examsBeyondTimeLimit(QueueReport *report, int timeLimit) {
+    int count = 0;
+
+    for (ExamRecord *record = report->front; record != NULL; record = record->next) {
+        if (record->finishTime > timeLimit) {
+            count++;
+        }
+    }
+
+    return count;
+}

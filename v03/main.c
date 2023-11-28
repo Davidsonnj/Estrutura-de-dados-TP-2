@@ -8,9 +8,9 @@
 int main() {
 
   srand(time(NULL));
-  int cont = 0;
-  int cont2 = 0;
-  int calc_metric1= 0;
+
+  int time_report_med;
+  float avgTime;
 
   int cont_Normal = 0;
   int cont_NormalTemp = 0;
@@ -31,9 +31,6 @@ int main() {
   int cont_Apendicite = 0;
   int cont_ApendiciteTemp = 0;
   int calc_Apendicite = 0;
-
-  int time_report_med = 0;
-  int qtd_patient_report = 0;
 
   int relatorio = 11; 
   int nextID = 1000;
@@ -83,13 +80,11 @@ int main() {
     Exam_Record(report, Machine, time);
 
     /* Tempo que o paciente saí da QueueReport (fila de laudo) e é alocado para o Radiologista */
-    cont = insert_radio(Radio, report, time); 
-    cont2 = remove_radio(Radio,time);
+    insert_radio(Radio, report, time); 
+    remove_radio(Radio,time);
 
-    time_report_med = time_report_med + cont;
-    qtd_patient_report = qtd_patient_report + cont2;
-
-    calc_metric1 = (qtd_patient_report != 0) ? (time_report_med / qtd_patient_report) : 0;
+    avgTime = averageReportTime(report);
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
     cont_Normal = total_path(report, "Saúde Normal");
     cont_NormalTemp = tempWait_path(report, "Saúde Normal");
@@ -124,7 +119,7 @@ int main() {
     if((relatorio % 10) == 0){
       printf("\nRELATÓRIO DE MÉTRICAS - Unidade de Tempo: %d\n", time);
 
-      printf("TML (Tempo médio de laudo): %d\n", calc_metric1);
+      printf("TML (Tempo médio de laudo): %.0f\n", avgTime);
 
       printf("TMP (Tempo médio de laudo por patologia (Saúde Normal)): %d\n", calc_normal);
 

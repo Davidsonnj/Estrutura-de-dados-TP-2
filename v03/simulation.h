@@ -88,9 +88,9 @@ ListRadiologist *Radiologist_create(); /* Função que cria a lista de radiologi
 
 void initializeRadiologist(int qtd, ListRadiologist *r); /* Função que inicializa o trabalho dos radiologistas */
 
-int insert_radio(ListRadiologist *r, QueueReport *patient, int time); /* Alocação do primeiro exame de QueueReport para radiologista livre */
+void insert_radio(ListRadiologist *r, QueueReport *patient, int time); /* Alocação do primeiro exame de QueueReport para radiologista livre */
 
-int remove_radio(ListRadiologist *r,int time); /* Remoção do  */
+void remove_radio(ListRadiologist *r,int time); /* Remoção do  */
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,5 +114,6 @@ void radio_print(ListRadiologist *radio);
 int total_path(QueueReport *r, const char *p);
 int tempWait_path(QueueReport *r, const char *p);
 int examsBeyondTimeLimit(QueueReport *report, int timeLimit);
+float averageReportTime(QueueReport *report);
 
 #endif

@@ -470,7 +470,7 @@ static Radiologist* checkRadiologistAvailability(ListRadiologist *radio){
 }
 
 /* Se houver radiologista disponível irá colocar o paciente para realização do laudo */
-int insert_radio(ListRadiologist *r, QueueReport *patient, int time) {
+void insert_radio(ListRadiologist *r, QueueReport *patient, int time) {
   Radiologist *radio = checkRadiologistAvailability(r);
 
   if (radio != NULL) {
@@ -484,15 +484,12 @@ int insert_radio(ListRadiologist *r, QueueReport *patient, int time) {
       radio->time = time;
       radio->occupation = 1;
       QueueDequeue_report(patient);
-      return numb_rand;
     }
   }
-  return 0;
 }
 
 /* Paciente termina sua consulta com o radiologista */
-int remove_radio(ListRadiologist *r,int time){
-  int cont = 0;
+void remove_radio(ListRadiologist *r,int time){
   for(Radiologist *radio = r->first; radio != NULL; radio = radio->next){
 
     if(time == (radio->durationRad + radio->time)){
@@ -500,10 +497,8 @@ int remove_radio(ListRadiologist *r,int time){
       radio->occupation = 0;
       radio->patientID = 0;
       radio->time = 0;
-      cont++;
     }
   }
-  return cont;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -600,4 +595,20 @@ int examsBeyondTimeLimit(QueueReport *report, int timeLimit) {
     }
 
     return count;
+}
+
+float averageReportTime(QueueReport *report) {
+    if (QueueReportEmpty(report)) {
+        return 0.0;
+    }
+
+    int totalReports = 0;
+    int totalTime = 0;
+
+    for (ExamRecord *record = report->front; record != NULL; record = record->next) {
+        totalTime += record->finishTime;
+        totalReports++;
+    }
+
+    return (float)totalTime / totalReports;
 }

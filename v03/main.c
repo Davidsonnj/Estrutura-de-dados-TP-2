@@ -9,6 +9,14 @@ int main() {
 
   srand(time(NULL));
 
+  /* Variáveis usadas durante o código */
+  int relatorio = 11; 
+  int nextID = 1000;
+  int max_time = 43200;
+  char filename[10];
+  patient *patient;
+
+  /* Variáveis para métricas */
   int time_report_med;
   float avgTime;
 
@@ -32,21 +40,18 @@ int main() {
   int cont_ApendiciteTemp = 0;
   int calc_Apendicite = 0;
 
-  int relatorio = 11; 
-  int nextID = 1000;
-  int max_time = 100;
-  char filename[10];
-  patient *patient;
-
+  /* Acesso ao arquivo */
   printf("Digite o nome do arquivo: ");
   scanf("%s", filename);
 
+  /* Inicializando variáveis (Alocando memória) */
   ListPatient *list_patient = ListPatient_create();
   QueueExams *exams = QueueExams_create();
   QueueReport *report = QueueReport_create();
   ListMachines *Machine = ListMachines_create();
   ListRadiologist *Radio = Radiologist_create();
 
+  /* Lendo o arquivo como o nome dado anteriormente */
   FILE *arquivo = fopen(filename, "r");
 
   if (arquivo == NULL) {
@@ -54,11 +59,14 @@ int main() {
     return 1;
   }
 
+  /* Inicialização das maquinas e dos radiologistas */
   initializeMachines(5, Machine);
   initializeRadiologist(3, Radio);
 
+  /* Horário (USANDO LOOP FOR) */
   for(int time=1; time <= max_time; time++) {
 
+    /* Chegada do paciente (20% de chance de chegar um paciente) */
     if (rand() % 5 + 1 == 1) {
       
       char name[50];
@@ -76,6 +84,7 @@ int main() {
         nextID++;
     }
 
+    /* Funçoes de exame até radiologia */
     insert_machines(Machine, exams, time);
     Exam_Record(report, Machine, time);
 
@@ -83,8 +92,8 @@ int main() {
     insert_radio(Radio, report, time); 
     remove_radio(Radio,time);
 
+    /* Cálculo das métricas */
     avgTime = averageReportTime(report);
-    /////////////////////////////////////////////////////////////////////////////////////////////
 
     cont_Normal = total_path(report, "Saúde Normal");
     cont_NormalTemp = tempWait_path(report, "Saúde Normal");
@@ -136,8 +145,13 @@ int main() {
     
     relatorio = relatorio + 1;
   }
-  printf("\n");
-  //patient_print(list_patient);
+
+  /*Limpando memória das lista e das filas implementadas */
+  listpatient_free(list_patient);
+  listmach_free(Machine);
+  listradiologist_free(Radio);
+  qexam_free(exams);
+  qreport_free(report);
 
   fclose(arquivo);
   return 0;

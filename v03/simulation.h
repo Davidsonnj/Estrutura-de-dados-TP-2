@@ -90,30 +90,40 @@ void initializeRadiologist(int qtd, ListRadiologist *r); /* Função que inicial
 
 void insert_radio(ListRadiologist *r, QueueReport *patient, int time); /* Alocação do primeiro exame de QueueReport para radiologista livre */
 
-void remove_radio(ListRadiologist *r,int time); /* Remoção do  */
+void remove_radio(ListRadiologist *r,int time); /* Remoção do paciente (conclusao do laudo) */
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       # PRINTS #                                                  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void patient_print(ListPatient *l);
+void patient_print(ListPatient *l); /* Função que printa a lista de pacientes */
 
-void QueueExams_print(QueueExams *exams);
+void QueueExams_print(QueueExams *exams); /* Função que printa a fila de exames */
 
-void machine_print(ListMachines *machine);
+void machine_print(ListMachines *machine); /* Função que printa as maquinas e sua disponibilidade */
 
-void QueueReport_print(QueueReport *r);
+void QueueReport_print(QueueReport *r); /* Função que printa a fila para laudos */
 
-void radio_print(ListRadiologist *radio);
+void radio_print(ListRadiologist *radio); /* Função que printa os radiologistas e sua disponibilidade */
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                          # FUNÇÃO PARA METRICAS #                                                 */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int total_path(QueueReport *r, const char *p); /* Função que calcula total de exames relacionados a essa patologia */
+int tempWait_path(QueueReport *r, const char *p); /* Função que calcula total de exames relacionados a essa patologia */
+int examsBeyondTimeLimit(QueueReport *report, int timeLimit); /*Função que calcula a soma dos tempos de espera dos exames de uma patologia específica */
+float averageReportTime(QueueReport *report); /* Função que calcula o tempo médio do relatório */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                        # FUNÇÃO PARA LIMPAR MEMORIA #                                             */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int total_path(QueueReport *r, const char *p);
-int tempWait_path(QueueReport *r, const char *p);
-int examsBeyondTimeLimit(QueueReport *report, int timeLimit);
-float averageReportTime(QueueReport *report);
+void listpatient_free(ListPatient *p); /* Função que limpa a lista de pacientes */
+void listmach_free(ListMachines *mach); /* Função que limpa a lista de máquinas */
+void listradiologist_free(ListRadiologist *radio); /* Função que limpa a lista de radiologistas */
+void qexam_free(QueueExams *exam); /* Função que limpa a fila de exames */
+void qreport_free(QueueReport *report); /* Função que limpa a fila de laudos */
 
 #endif

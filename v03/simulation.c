@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 
+/* Estrutura do paciente */
 struct Patient {
 
   char name[50]; /* Nome do paciente */
@@ -13,30 +14,34 @@ struct Patient {
   int id;        /* Identificador do paciente */
 };
 
+/* Lista de paciente */
 struct ListOfPatients {
   int count;       /* Contador de pacientes */
   ListNode *first; /* Ponteiro para o primeiro paciente da lista */
   ListNode *last;  /* Ponteiro para o último paciente da lista */
 };
 
+/* Nó da lista paciente  */
 struct list_node {
   patient *patients; /* Registro do paciente */
   ListNode *next;    /* Ponteiro para o próximo paciente */
   ListNode *prev;    /* Ponteiro para o paciente anterior */
 };
 
+/* Fila de Exames, que armazena somente o ID dos novos pacientes */
 struct QueueExams {
 
   QueueNode *front; /* Ponteiro para o primeiro exame da fila */
   QueueNode *rear;  /* Ponteiro para o último exame da fila */
 };
 
+/* Auxiliar para implementação de QueueExams */
 struct Queue_Node {
   int id;          /* Identificador dos pacientes da fila */
   QueueNode *next; /* Ponteiro para o próximo paciente da fila */
 };
 
-/*Lista de maquinas */
+/* Lista de maquinas */
 struct ListOfMachines {
   int count;       /* Contador de máquinas */
   Machines *first; /* Ponteiro para a primeiro máquina da lista */
@@ -52,16 +57,16 @@ struct Machines {
   Machines *prev;
 };
 
+struct QueueReport {
+  ExamRecord *front;       /* Ponteiro para o primeiro registro de exame na fila de laudos */
+  ExamRecord *rear;        /* Ponteiro para o último registro de exame na fila de laudos */
+};
+
 struct ExamRecord {
   int id;
   int finishTime;   /* Paciente sai da máquina    */
   Pathologie *path;
   ExamRecord *next;
-};
-
-struct QueueReport {
-  ExamRecord *front;       /* Ponteiro para o primeiro registro de exame na fila de laudos */
-  ExamRecord *rear;        /* Ponteiro para o último registro de exame na fila de laudos */
 };
 
 struct Pathologies {
@@ -551,14 +556,7 @@ void radio_print(ListRadiologist *radio){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                        # FUNÇÃO PARA LIMPAR MEMORIA #                                             */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                        # FUNÇÃO PARA LIMPAR MEMORIA #                                             */
+/*                                        # FUNÇÃO PARA METRICAS #                                                   */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int total_path(QueueReport *r, const char *p){
@@ -612,3 +610,61 @@ float averageReportTime(QueueReport *report) {
 
     return (float)totalTime / totalReports;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                        # FUNÇÃO PARA LIMPAR MEMORIA #                                             */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void listpatient_free(ListPatient *p){
+   ListNode *node_pat = p->first;
+   ListNode *temp;
+   while (node_pat != NULL){
+      temp = node_pat->next;
+      free(node_pat);
+      node_pat = temp;
+   }
+   free(p); 
+}
+
+void listmach_free(ListMachines *mach){
+   Machines *node_mach = mach->first;
+   Machines *temp;
+   while (node_mach != NULL){
+      temp = node_mach->next;
+      free(node_mach);
+      node_mach = temp;
+   }
+   free(mach); 
+}
+
+void listradiologist_free(ListRadiologist *radio){
+   Radiologist *node_radio = radio->first;
+   Radiologist *temp;
+   while (node_radio != NULL){
+      temp = node_radio->next;
+      free(node_radio);
+      node_radio = temp;
+   }
+   free(radio); 
+}
+
+void qexam_free(QueueExams *exam){
+   QueueNode *node_exam = exam->front;
+   while (node_exam != NULL){
+      QueueNode *temp = node_exam->next;
+      free(node_exam);           
+      node_exam = temp;              
+   }
+   free(exam); 
+}
+
+void qreport_free(QueueReport *report){
+   ExamRecord *record = report->front;
+   while (record != NULL){
+      ExamRecord *temp = record->next;
+      free(record);
+      record = temp;
+   }
+   free(report);
+}
+

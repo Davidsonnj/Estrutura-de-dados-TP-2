@@ -57,11 +57,13 @@ struct Machines {
   Machines *prev;
 };
 
+/* Fila de Laudos, que armazena os registros de exames */
 struct QueueReport {
   ExamRecord *front;       /* Ponteiro para o primeiro registro de exame na fila de laudos */
   ExamRecord *rear;        /* Ponteiro para o último registro de exame na fila de laudos */
 };
 
+/* Registro dos exames */
 struct ExamRecord {
   int id;
   int finishTime;   /* Paciente sai da máquina    */
@@ -69,18 +71,21 @@ struct ExamRecord {
   ExamRecord *next;
 };
 
+/* Estrutura relativa as características da patologia (condição e gravidade) */
 struct Pathologies {
 
   char condition[20]; /* Condição do Paciente */
   int urgency;        /* Gravidade da condição */
 };
 
+/* Lista dos Radiologistas */
 struct ListOfRadiologist{
   int count;       /* Contador de máquinas */
   Radiologist *first; /* Ponteiro para a primeiro máquina da lista */
   Radiologist *last;  /* Ponteiro para a último máquina da lista */
 };
 
+/* Estrutura relativa aos Radiologistas e o processo de preparação do laudo */
 struct Radiologist
 {
   int occupation;
